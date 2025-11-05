@@ -1,0 +1,52 @@
+{% extends 'base_admin.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    {% block content %}
+
+    <section style="margin: 20px; padding: 20px; border: 2px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
+      <h1 style="text-align: center;">Reservas programadas</h1>
+      <br>
+      <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%; text-align: center;">
+        <thead style="background-color: #333; color: white;">
+          <tr>
+            <th style="text-align: center;">Numero de Reserva</th>
+            <th style="text-align: center;">Fecha</th>
+            <th style="text-align: center;">Hora</th>
+            <th style="text-align: center;">Nombre del Servicio</th>
+            <th style="text-align: center;">Recomendaciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for reserva in reservas %}
+            <tr style="background-color: #fafafa; color: black;">
+              <td>
+                  {{ reserva.id }}
+              </td>
+              <td>{{ reserva.fecha_reserva }}</td>
+              <td>{{ reserva.hora_reserva }}</td>
+              <td>{{ reserva.servicio }}</td>
+              <td>{{ reserva.recomendaciones }}</td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="5" style="text-align: center; font-style: italic;">No tienes reservas.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    {% endblock %}
+
+</body>
+</html>
+
+

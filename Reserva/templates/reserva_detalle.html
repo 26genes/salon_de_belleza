@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Reserva</title>
+</head>
+<body>
+
+    {% block content %}
+    <section style="margin: 20px; padding: 20px; border: 2px solid #ddd; border-radius: 8px; background-color: #f9f9f9; text-align: center;">
+        <h1>Detalle de la reserva {{ reserva.id }}</h1>
+        <br>
+
+        <table align="center" cellpadding="10" cellspacing="0" border="1" style="border-collapse: collapse; width: 100%; table-layout: auto;">
+            <tr style="background-color: #333; color: white;">
+                <th style="text-align: center;">Numero de Reserva</th>
+                <th style="text-align: center;">Fecha</th>
+                <th style="text-align: center;">Hora</th>
+                <th style="text-align: center;">Nombre del Servicio</th>
+                <th style="text-align: center;">Recomendaciones</th>
+            </tr>
+            <tr>
+                <td>{{ reserva.id }}</td>
+                <td>{{ reserva.fecha_reserva }}</td>
+                <td>{{ reserva.hora_reserva }}</td>
+                <td>{{ reserva.servicio }}</td>
+                <td>{{ reserva.recomendaciones }}</td>
+            </tr>
+        </table>
+
+        <div style="margin-top: 20px;">
+            <a href="{% url 'actualizar_reserva' reserva.id %}" style="margin-right: 15px; text-decoration: none;">
+                <button style="background-color: #007bff; color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px;">Editar</button>
+            </a>
+
+            <form action="{% url 'eliminar_reserva' reserva.id %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" style="background-color: #e74c3c; color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px;">Eliminar</button>
+            </form>
+
+            <a href="{% url 'ver_reservas' %}" style="margin-left: 15px; text-decoration: none; color: #007bff;">Volver</a>
+        </div>
+    </section>
+    {% endblock %}
+
+</body>
+</html>

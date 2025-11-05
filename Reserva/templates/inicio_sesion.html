@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f5f5f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;">
+    
+    <div style="background: #ffffff; padding: 60px; border-radius: 20px; box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); width: 600px; text-align: center;">
+        <h2 style="color: #150d59; margin-bottom: 40px; font-size: 32px;">Iniciar Sesión</h2>
+        <form method="post" style="margin: 0;">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit" style="background-color: #150d59; color: white; padding: 20px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 20px; width: 100%; margin-top: 30px;">Ingresar</button>
+        </form>
+        <a href="{% url 'registrar_usuario' %}" style="margin-top: 30px; display: inline-block; font-size: 18px; color: #150d59; text-decoration: none;">¿Necesitas una cuenta? Registrarse</a>
+    </div>
+
+</body>
+</html>

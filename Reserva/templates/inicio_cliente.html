@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+  {% block content %}
+
+  {% if user.is_authenticated %}
+  {% if reservas_proximas %}
+  <div class="alert alert-info">
+      <h4>Recordatorio de citas próximas:</h4>
+
+          {% for reserva in reservas_proximas %}
+          <ul>
+              <li>
+                  {{ reserva.servicio.nombre }} - 
+                  {{ reserva.fecha_reserva|date:"d/m/Y" }} 
+                  a las {{ reserva.hora_reserva|time:"H:i" }}
+              </li>
+            </ul>
+          {% endfor %}
+  </div>
+  {% else %}
+  <div class="alert alert-warning">
+      <h4>No tienes reservas próximas.</h4>
+  </div>
+  {% endif %}  
+  {% endif %}       
+
+      <br>
+      <div class="container">
+          <div class="row">
+              <div class="col-md-5 site-animate mb-5">
+                  <h4 class="site-sub-title">Nuestra Historia</h4>
+                  <h2 class="site-primary-title display-4">Bienvenidos</h2>
+                  <p>En el corazón de la ciudad, donde la belleza se encuentra con la tranquilidad, hemos creado un espacio dedicado a tu bienestar.</p>
+  
+                  <p class="mb-4">Nuestro salón de belleza ha sido diseñado para ofrecerte un ambiente relajante y exclusivo, donde cada detalle está pensado para resaltar tu belleza natural. Nos apasiona brindarte servicios personalizados de alta calidad.</p>
+              </div>
+              <div class="col-md-1"></div>
+              <div class="col-md-6 site-animate img" data-animate-effect="fadeInRight">
+                  <img src="{% static 'images/about_img_1.jpg' %}" alt="Salón de Belleza" class="img-fluid">
+              </div>
+          </div>
+      </div>
+  </section>
+  <!-- END section -->
+  
+
+
+
+
+    <section class="site-section bg-light" id="section-offer">
+        <div class="container">
+  
+          <div class="row">
+            <div class="col-md-12 text-center mb-5 site-animate">
+              <h4 class="site-sub-title">Nuestros Servicios</h4>
+              <h2 class="display-4">Servicios Disponibles Este Mes</h2>
+              <div class="row justify-content-center">
+                <div class="col-md-7">
+                  <p class="lead">Te ofrecemos una amplia gama de servicios de belleza diseñados para realzar tu estilo y resaltar tu belleza natural. </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="owl-carousel site-owl">
+                
+                {% for servicio in servicios %}
+                <div class="item">
+                  <div class="media d-block mb-4 text-center site-media site-animate border-0">
+                    <img src="{{ servicio.imagen.url }}" alt="{{ servicio.nombre }}" class="img-fluid">
+                    <div class="media-body p-md-5 p-4">
+                      <h5 class="text-primary">${{ servicio.precio }}</h5>
+                      <h5 class="mt-0 h4">{{ servicio.nombre }}</h5>
+                      <p class="mb-4">{{ servicio.descripcion }}</p>
+                      <p class="mb-4"><strong>Duración:</strong> {{ servicio.duracion }} minutos</p>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+    <!-- END section -->
+
+
+      {% endblock %}
+
+    
+</body>
+</html>

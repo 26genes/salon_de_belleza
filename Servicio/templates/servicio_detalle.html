@@ -1,0 +1,44 @@
+{% extends 'base_admin.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+            
+    {% block content %}
+
+      <section class="site-section" id="section-about">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-5 site-animate mb-5">
+              <h4 class="site-sub-title">Servicio</h4>
+              <h2 class="site-primary-title display-4">{{servicio.nombre}}</h2>
+              <p>{{servicio.descripcion}}</p>
+  
+              <p class="mb-4">{{servicio.precio}} - {{servicio.duracion}}</p>
+              <!-- Botón Editar (verde) -->
+              <p><a href="{% url 'actualizar_servicio' servicio.id %}" class="btn btn-success btn-lg">Editar</a></p>
+              
+              <!-- Botón Eliminar (rojo) -->
+              <p> 
+                <form action="{% url 'eliminar_servicio' servicio.id %}" method="POST">
+                  {% csrf_token %}
+                  <input type="submit" value="Eliminar" class="btn btn-danger btn-lg">
+                </form>
+              </p>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-6 site-animate img" data-animate-effect="fadeInRight">
+              <img src="{{servicio.imagen.url}}" alt="Free Template by colorlib.com" class="img-fluid">
+            </div>
+          </div>
+        </div>
+      </section>
+
+    {% endblock %}
+    
+</body>
+</html>
