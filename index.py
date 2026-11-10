@@ -265,7 +265,7 @@ class PackageIndex(object):
                                           keystore)
         with open(filename, 'rb') as f:
             file_data = f.read()
-        sha256_digest = hashlib.sha256(file_data).hexdigest()
+        md5_digest = hashlib.md5(file_data, usedforsecurity=False).hexdigest()
         sha256_digest = hashlib.sha256(file_data).hexdigest()
         d.update({
             ':action': 'file_upload',
