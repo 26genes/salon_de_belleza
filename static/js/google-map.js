@@ -1,5 +1,4 @@
-
-var google;
+/* global google, $ */
 
 function init() {
     // Basic options for a simple Google Map
@@ -49,14 +48,17 @@ function init() {
         $.getJSON('https://maps.googleapis.com/maps/api/geocode/json?address='+encodeURIComponent(addresses[x])+'&sensor=false', null, function (data) {
             var p = data.results[0].geometry.location
             var latlng = new google.maps.LatLng(p.lat, p.lng);
-            new google.maps.Marker({
+            var marker = new google.maps.Marker({
                 position: latlng,
-                map: map,
                 icon: 'images/loc.png'
             });
+            marker.setMap(map);
 
         });
     }
     
 }
-google.maps.event.addDomListener(window, 'load', init);
+// Solo se inicia el mapa si la API de Google Maps se cargo correctamente
+if (typeof google !== 'undefined' && google.maps) {
+    google.maps.event.addDomListener(window, 'load', init);
+}

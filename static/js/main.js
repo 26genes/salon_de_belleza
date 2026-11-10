@@ -16,7 +16,6 @@ $(document).ready(function($) {
 		$('.owl-carousel').owlCarousel({
 			loop: true,
 			margin: 10,
-			nav: true,
 			stagePadding: 5,
 			nav: false,
 			navText: ['<span class="icon-chevron-left">', '<span class="icon-chevron-right">'],
@@ -127,7 +126,7 @@ $(document).ready(function($) {
 								el.addClass('fadeInUp site-animated');
 							}
 							el.removeClass('item-animate');
-						},  k * 50, 'easeInOutExpo' );
+						},  k * 50 );
 					});
 					
 				}, 100);
