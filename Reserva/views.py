@@ -1,18 +1,13 @@
-from django.utils import timezone
-from datetime import timedelta
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import authenticate, logout, login
-from django.http import HttpResponse
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.db import IntegrityError
-from django.shortcuts import redirect
 from .forms import FormularioReserva
 from .models import Reserva
 from django.contrib.auth.decorators import login_required
-from Servicio.models import  Servicio
+from Servicio.models import Servicio
 from django.contrib import messages
-from django.shortcuts import render
 
 # Create your views here.
 
@@ -74,6 +69,7 @@ def inicio_cliente(request):
         'servicios': servicios
     })
 
+@login_required
 def create_servicio(request):
     if request.method == 'POST':
         form = FormularioReserva(request.POST)
@@ -94,9 +90,9 @@ def create_servicio(request):
     })
 
 
+@login_required
 def ver_reservas(request):
     reservas = Reserva.objects.filter(usuario=request.user)
-    print(reservas)
     return render(request, 'ver_reserva.html', {
         'reservas': reservas
     })
@@ -109,14 +105,16 @@ def ver_servicio(request):
 
 
 
+@login_required
 def reserva_detalle(request, id):
-    reserva = get_object_or_404(Reserva, pk=id)
+    reserva = get_object_or_404(Reserva, pk=id, usuario=request.user)
     return render(request, 'reserva_detalle.html', {
         'reserva': reserva
     })
 
+@login_required
 def actualizar_reserva(request, id):
-    reserva = get_object_or_404(Reserva, pk=id)
+    reserva = get_object_or_404(Reserva, pk=id, usuario=request.user)
     form = FormularioReserva(request.POST or None, instance=reserva)
     if form.is_valid():
         form.save()
@@ -126,8 +124,9 @@ def actualizar_reserva(request, id):
         'titulo': 'Actualizar Reserva'
     })
 
+@login_required
 def eliminar_reserva(request, id):
-    reserva = get_object_or_404(Reserva, pk=id)
+    reserva = get_object_or_404(Reserva, pk=id, usuario=request.user)
     if request.method == 'POST':
         reserva.delete()
     return redirect('ver_reservas')

@@ -1,18 +1,26 @@
-from django.shortcuts import get_object_or_404, render
-from django.contrib.auth import authenticate, logout, login
-from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.models import User, Group
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm
 from django.db import IntegrityError
-from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 from .forms import FormularioServicio
 from .models import Servicio
 from django.contrib import messages
 from Reserva.models import Reserva
 
+
+def es_administrador(user):
+    """Solo los superusuarios o el grupo 'administrador' pueden gestionar el salon."""
+    return user.is_authenticated and (
+        user.is_superuser or user.groups.filter(name='administrador').exists()
+    )
+
+
+solo_administrador = user_passes_test(es_administrador, login_url='login_usuario')
+
 # Create your views here.
 
+@solo_administrador
 def inicio_admin(request):
     servicios = Servicio.objects.all()[:6]
     return render(request, 'inicio_admin.html',{
@@ -20,6 +28,7 @@ def inicio_admin(request):
     })
 
 
+@solo_administrador
 def registrar_admin(request):
     if request.method == 'POST':
         try:
@@ -43,6 +52,7 @@ def registrar_admin(request):
         'form': UserCreationForm(),
     })
 
+@solo_administrador
 def crear_servicio(request):
     if request.method == 'POST':
         form = FormularioServicio(request.POST, request.FILES)
@@ -60,18 +70,21 @@ def crear_servicio(request):
         'form': FormularioServicio(),
     })
 
+@solo_administrador
 def ver_servicios(request):
     servicios = Servicio.objects.all()
     return render(request, 'ver_servicios.html',{
         'servicios' : servicios
     })
 
+@solo_administrador
 def servicio_detalle(request, id):
     servicio = get_object_or_404(Servicio, pk=id)
     return render(request, 'servicio_detalle.html',{
         'servicio' : servicio
     })
 
+@solo_administrador
 def actualizar_servicio(request, id):
     servicio = get_object_or_404(Servicio, pk=id)
     if request.method == 'POST':
@@ -87,6 +100,7 @@ def actualizar_servicio(request, id):
     })
 
 
+@solo_administrador
 def eliminar_servicio(request, id):
     servicio = get_object_or_404(Servicio, pk=id)
     if request.method == 'POST':
@@ -94,6 +108,7 @@ def eliminar_servicio(request, id):
     return redirect('ver_servicios')
 
 
+@solo_administrador
 def ver_reservas(request):
     reservas = Reserva.objects.all()
     return render(request, 'ver_reservas.html', {
