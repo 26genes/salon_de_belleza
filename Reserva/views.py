@@ -8,9 +8,11 @@ from .models import Reserva
 from django.contrib.auth.decorators import login_required
 from Servicio.models import Servicio
 from django.contrib import messages
+from django.views.decorators.http import require_GET, require_POST, require_http_methods
 
 # Create your views here.
 
+@require_http_methods(["GET", "POST"])
 def registrar_usuario(request):
     if request.method == 'POST':
         try:
@@ -31,6 +33,7 @@ def registrar_usuario(request):
             'error' : "Contraseñas no coinciden"
         })
 
+@require_http_methods(["GET", "POST"])
 def login_usuario(request):
     if request.method == 'POST':
         usuario = authenticate(request, username=request.POST['username'], password=request.POST['password'])
@@ -46,16 +49,19 @@ def login_usuario(request):
         'form' : AuthenticationForm()
     })
 
+@require_http_methods(["GET", "POST"])
 def log_out_user(request):
     logout(request)
     return redirect('inicio_cliente')
 
+@require_GET
 @login_required
 def redirigir_tipo_usuario(request):
     if request.user.groups.filter(name='administrador').exists():
         return redirect('inicio_admin')
     return redirect('inicio_cliente')
 
+@require_GET
 def inicio_cliente(request):
     servicios = Servicio.objects.all() [:6]
     if request.user.is_authenticated:
@@ -69,6 +75,7 @@ def inicio_cliente(request):
         'servicios': servicios
     })
 
+@require_http_methods(["GET", "POST"])
 @login_required
 def create_servicio(request):
     if request.method == 'POST':
@@ -90,6 +97,7 @@ def create_servicio(request):
     })
 
 
+@require_GET
 @login_required
 def ver_reservas(request):
     reservas = Reserva.objects.filter(usuario=request.user)
@@ -97,6 +105,7 @@ def ver_reservas(request):
         'reservas': reservas
     })
 
+@require_GET
 def ver_servicio(request):
     servicio = Servicio.objects.all()
     return render(request, 'servicios.html', {
@@ -105,6 +114,7 @@ def ver_servicio(request):
 
 
 
+@require_GET
 @login_required
 def reserva_detalle(request, id):
     reserva = get_object_or_404(Reserva, pk=id, usuario=request.user)
@@ -112,6 +122,7 @@ def reserva_detalle(request, id):
         'reserva': reserva
     })
 
+@require_http_methods(["GET", "POST"])
 @login_required
 def actualizar_reserva(request, id):
     reserva = get_object_or_404(Reserva, pk=id, usuario=request.user)
@@ -124,6 +135,7 @@ def actualizar_reserva(request, id):
         'titulo': 'Actualizar Reserva'
     })
 
+@require_POST
 @login_required
 def eliminar_reserva(request, id):
     reserva = get_object_or_404(Reserva, pk=id, usuario=request.user)

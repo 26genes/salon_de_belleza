@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import user_passes_test
 from .forms import FormularioServicio
 from .models import Servicio
 from django.contrib import messages
+from django.views.decorators.http import require_GET, require_POST, require_http_methods
 from Reserva.models import Reserva
 
 
@@ -20,6 +21,7 @@ solo_administrador = user_passes_test(es_administrador, login_url='login_usuario
 
 # Create your views here.
 
+@require_GET
 @solo_administrador
 def inicio_admin(request):
     servicios = Servicio.objects.all()[:6]
@@ -28,6 +30,7 @@ def inicio_admin(request):
     })
 
 
+@require_http_methods(["GET", "POST"])
 @solo_administrador
 def registrar_admin(request):
     if request.method == 'POST':
@@ -52,6 +55,7 @@ def registrar_admin(request):
         'form': UserCreationForm(),
     })
 
+@require_http_methods(["GET", "POST"])
 @solo_administrador
 def crear_servicio(request):
     if request.method == 'POST':
@@ -70,6 +74,7 @@ def crear_servicio(request):
         'form': FormularioServicio(),
     })
 
+@require_GET
 @solo_administrador
 def ver_servicios(request):
     servicios = Servicio.objects.all()
@@ -77,6 +82,7 @@ def ver_servicios(request):
         'servicios' : servicios
     })
 
+@require_GET
 @solo_administrador
 def servicio_detalle(request, id):
     servicio = get_object_or_404(Servicio, pk=id)
@@ -84,6 +90,7 @@ def servicio_detalle(request, id):
         'servicio' : servicio
     })
 
+@require_http_methods(["GET", "POST"])
 @solo_administrador
 def actualizar_servicio(request, id):
     servicio = get_object_or_404(Servicio, pk=id)
@@ -100,6 +107,7 @@ def actualizar_servicio(request, id):
     })
 
 
+@require_POST
 @solo_administrador
 def eliminar_servicio(request, id):
     servicio = get_object_or_404(Servicio, pk=id)
@@ -108,6 +116,7 @@ def eliminar_servicio(request, id):
     return redirect('ver_servicios')
 
 
+@require_GET
 @solo_administrador
 def ver_reservas(request):
     reservas = Reserva.objects.all()
